@@ -1,0 +1,11 @@
+{
+  "name": "json-server",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev_server": "node json-server.js"
+  },
+  "dependencies": {
+    "json-server": "^0.17.4"
+  }
+}
