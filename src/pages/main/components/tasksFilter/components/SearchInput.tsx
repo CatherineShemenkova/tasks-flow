@@ -1,25 +1,37 @@
-import type { ChangeEventHandler, FC } from 'react';
-import { useDispatch } from 'react-redux';
+import { type ChangeEventHandler, type FC, useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 
 import { Input } from '@/components/ui/input.tsx';
-import { onFilterChange } from '@/store/tasksSlice';
+import { changeFilter, selectSearch } from '@/store/tasksSlice/tasksSlice';
+import { useAppDispatch, useAppSelector } from '@/store/store.ts';
 
-interface SearchInputProps {
-  value: string;
-}
+export const SearchInput: FC = () => {
+  const dispatch = useAppDispatch();
 
-export const SearchInput: FC<SearchInputProps> = ({ value }) => {
-  const dispatch = useDispatch();
+  const search = useAppSelector(selectSearch);
+
+  const [localSearch, setLocalSearch] = useState(search);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      dispatch(changeFilter({ search: localSearch }));
+    }, 300);
+
+    return () => clearTimeout(handler);
+  }, [localSearch, dispatch]);
+
+  useEffect(() => {
+    setLocalSearch(search);
+  }, [search]);
 
   const handleSearch: ChangeEventHandler<HTMLInputElement> = (e) => {
-    dispatch(onFilterChange({ search: e.target.value }));
+    setLocalSearch(e.target.value);
   };
 
   return (
     <div className="relative md:grow">
       <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-      <Input className="h-[38px] pl-9" value={value} placeholder="Search tasks..." onChange={handleSearch} />
+      <Input className="h-9 pl-9" value={localSearch} placeholder="Search tasks..." onChange={handleSearch} />
     </div>
   );
 };

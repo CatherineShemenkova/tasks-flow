@@ -1,6 +1,6 @@
-import type { TaskTag } from '@/types/tasks.ts';
-import type { SortOption } from '@/constants/tasks.ts';
-import type { Paginated } from '@/types';
+import { SortOption, TaskPriority, TaskStatus, type TaskTag } from '@/types/tasks.ts';
+import type { Paginated } from '@/types/pagination.ts';
+import type { ALL_OPTION } from '@/constants';
 
 export interface TasksSliceState {
   pagination: Paginated;
@@ -11,6 +11,6 @@ export interface TasksSliceState {
 export interface TasksSliceFilter {
   search: string;
   selectedTags: TaskTag[];
-  priority: string;
-  status: string;
+  priority: TaskPriority | typeof ALL_OPTION;
+  status: TaskStatus | typeof ALL_OPTION;
 }

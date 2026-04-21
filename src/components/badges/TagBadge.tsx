@@ -1,18 +1,17 @@
-import { type ComponentType, createElement, type FC, type MouseEventHandler } from 'react';
-import { X, Tag } from 'lucide-react';
+import { type FC, type MouseEventHandler } from 'react';
+import { Tag, X } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge.tsx';
-import { cn } from '@/utils';
+import { cn } from '@/utils/shared';
 
 interface TagBadgeProps {
   label: string;
   onClick?: VoidFunction;
   removable?: boolean;
   withIcon?: boolean;
-  icon?: ComponentType;
 }
 
-export const TagBadge: FC<TagBadgeProps> = ({ label, onClick, removable, withIcon, icon = Tag }) => {
+export const TagBadge: FC<TagBadgeProps> = ({ label, onClick, removable, withIcon }) => {
   const handleClick: MouseEventHandler = (e) => {
     e.preventDefault();
     onClick?.();
@@ -27,7 +26,7 @@ export const TagBadge: FC<TagBadgeProps> = ({ label, onClick, removable, withIco
       )}
       onClick={handleClick}
     >
-      {withIcon && createElement(icon)}
+      {withIcon && <Tag />}
       {label}
       {removable && <X />}
     </Badge>

@@ -1,54 +1,40 @@
 import { type FC, Fragment, useState } from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { Check, ChevronsUpDown, Plus } from 'lucide-react';
+import { Controller, useFormContext } from 'react-hook-form';
+import { Plus, Tag } from 'lucide-react';
 
-import { useCreateTaskTagMutation } from '@/api/tasks/tasks.ts';
+import { useCreateTaskTagMutation } from '@/api/tasks/tasksApi.ts';
 import { Field } from '@/components/ui/field.tsx';
-import { TagBadge } from '@/components/badges/TagBadge.tsx';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command.tsx';
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxValue,
+  useComboboxAnchor,
+} from '@/components/ui/combobox.tsx';
 import { FormFieldError, FormFieldLabel } from '@/components/formField/FormField.tsx';
+import { DelayedLoader } from '@/components/loader/Loader.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import type { TaskTag } from '@/types/tasks.ts';
-import { cn } from '@/utils';
 import type { TaskFormValues } from '../form.ts';
+import { cn } from '@/utils/shared.ts';
 
 interface TagsControllerProps {
   tags?: TaskTag[];
 }
 
 export const TagsController: FC<TagsControllerProps> = ({ tags }) => {
-  const [createTag] = useCreateTaskTagMutation();
+  const [createTag, { isLoading }] = useCreateTaskTagMutation();
+
+  const anchor = useComboboxAnchor();
 
   const { control, formState } = useFormContext<TaskFormValues>();
-  const { remove, append, fields } = useFieldArray({ name: 'tags', control });
 
-  const [isOpen, setOpen] = useState(false);
   const [search, setSearch] = useState('');
-
-  const handleCreateTag = () => {
-    createTag({ name: search })
-      .unwrap()
-      .then((res) => {
-        handleSelectTag(res);
-        setSearch('');
-      });
-  };
-
-  const handleDeselectTag = (tag: TaskTag) => {
-    remove(fields.findIndex((t) => t.id === tag.id));
-  };
-
-  const handleSelectTag = (tag: TaskTag) => {
-    append(tag);
-  };
 
   return (
     <Field>
@@ -58,66 +44,60 @@ export const TagsController: FC<TagsControllerProps> = ({ tags }) => {
         name="tags"
         control={control}
         render={({ field, fieldState }) => {
-          const selectedTags: TaskTag[] = field.value;
-          const selectedIds = new Set(selectedTags.map((t) => t.id));
+          const handleCreateTag = () => {
+            createTag({ name: search })
+              .unwrap()
+              .then((res) => {
+                field.onChange([...field.value, res]);
+                setSearch('');
+              });
+          };
 
           return (
             <Fragment>
-              <Popover open={isOpen} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className={cn(
-                      'h-[38px] justify-between px-3 font-normal',
-                      fieldState.error && 'border-destructive!'
-                    )}
-                  >
-                    <span className="text-muted-foreground">Select or add tags</span>
-                    <ChevronsUpDown className="shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-
-                <PopoverContent className="w-full p-0" align="start">
-                  <Command>
-                    <CommandInput placeholder="Search tags..." value={search} onValueChange={setSearch} />
-
-                    <CommandList>
-                      <CommandEmpty>
-                        <Button variant="ghost" type="button" onClick={handleCreateTag}>
-                          <Plus />
-                          Create &quot;{search}&quot;
-                        </Button>
-                      </CommandEmpty>
-
-                      <CommandGroup>
-                        {tags?.map((tag) => (
-                          <CommandItem
-                            key={tag.id}
-                            value={tag.name}
-                            onSelect={() => {
-                              if (selectedIds.has(tag.id)) {
-                                handleDeselectTag(tag);
-                              } else {
-                                handleSelectTag(tag);
-                              }
-                            }}
-                          >
-                            <Check className={cn(selectedIds.has(tag.id) ? 'opacity-100' : 'opacity-0')} />
-                            {tag.name}
-                          </CommandItem>
+              <Combobox
+                items={tags}
+                value={field.value}
+                onValueChange={field.onChange}
+                inputValue={search}
+                onInputValueChange={setSearch}
+                isItemEqualToValue={(a, b) => a.id === b.id}
+                multiple
+              >
+                <ComboboxChips ref={anchor} className={cn('min-h-10', fieldState.error && 'border-destructive')}>
+                  <ComboboxValue>
+                    {(values: TaskTag[]) => (
+                      <Fragment>
+                        {values.map((value) => (
+                          <ComboboxChip key={value.id}>{value.name}</ComboboxChip>
                         ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
 
-              <div className="flex flex-wrap gap-2">
-                {selectedTags.map((tag) => (
-                  <TagBadge key={tag.id} label={tag.name} onClick={() => handleDeselectTag(tag)} removable withIcon />
-                ))}
-              </div>
+                        <ComboboxChipsInput placeholder="Select or add tags" />
+
+                        <Tag className="h-4 w-4 opacity-50" />
+                      </Fragment>
+                    )}
+                  </ComboboxValue>
+                </ComboboxChips>
+
+                <ComboboxContent anchor={anchor}>
+                  <ComboboxEmpty className="px-3">
+                    <Button className="pointer-events-auto max-w-full" variant="secondary" onClick={handleCreateTag}>
+                      <Plus />
+                      <span className="truncate">Create &quot;{search}&quot;</span>
+                      {isLoading && <DelayedLoader />}
+                    </Button>
+                  </ComboboxEmpty>
+
+                  <ComboboxList className="pointer-events-auto">
+                    {(tag) => (
+                      <ComboboxItem key={tag.id} value={tag}>
+                        {tag.name}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
             </Fragment>
           );
         }}

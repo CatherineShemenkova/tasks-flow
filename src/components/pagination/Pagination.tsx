@@ -3,13 +3,15 @@ import type { FC } from 'react';
 import {
   Pagination as ShadcnPagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination.tsx';
-import { cn } from '@/utils';
 import { PAGINATION } from '@/constants/pagination.ts';
+import { cn } from '@/utils/shared.ts';
+import { getPages } from './helpers.ts';
 
 interface PaginationProps {
   current: number;
@@ -22,12 +24,14 @@ export const Pagination: FC<PaginationProps> = ({ current, pageSize, total, onPa
   const totalPages = Math.ceil(total / pageSize);
 
   const handlePrev = () => {
-    onPageChange(Math.max(1, current - 1));
+    onPageChange(Math.max(PAGINATION.DEFAULT_PAGE, current - 1));
   };
 
   const handleNext = () => {
     onPageChange(Math.min(totalPages, current + 1));
   };
+
+  if (totalPages <= 1) return null;
 
   return (
     <ShadcnPagination className="w-fit">
@@ -39,11 +43,15 @@ export const Pagination: FC<PaginationProps> = ({ current, pageSize, total, onPa
           />
         </PaginationItem>
 
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <PaginationItem key={page}>
-            <PaginationLink onClick={() => onPageChange(page)} isActive={current === page}>
-              {page}
-            </PaginationLink>
+        {getPages(current, totalPages).map((page, i) => (
+          <PaginationItem key={i}>
+            {page === -1 ? (
+              <PaginationEllipsis />
+            ) : (
+              <PaginationLink onClick={() => onPageChange(page)} isActive={current === page}>
+                {page}
+              </PaginationLink>
+            )}
           </PaginationItem>
         ))}
 

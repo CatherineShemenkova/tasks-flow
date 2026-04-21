@@ -1,12 +1,11 @@
 import type { FC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { useGetTasksTagsQuery } from '@/api/tasks/tasks.ts';
+import { useGetTasksTagsQuery } from '@/api/tasks/tasksApi.ts';
+import { changeFilter, selectSelectedTags } from '@/store/tasksSlice/tasksSlice';
+import { useAppDispatch, useAppSelector } from '@/store/store.ts';
 import { TagBadge } from '@/components/badges/TagBadge.tsx';
 import type { Task, TaskTag } from '@/types/tasks.ts';
-import { mapFromTags } from '@/utils';
-import { onFilterChange } from '@/store/tasksSlice';
-import { selectSelectedTagIds, selectSelectedTags } from '@/store/tasksSlice/selectors.ts';
+import { mapFromTags } from '@/utils/tasks.ts';
 
 interface TaskTagsPickerProps {
   task: Task;
@@ -15,18 +14,18 @@ interface TaskTagsPickerProps {
 export const TaskTagsPicker: FC<TaskTagsPickerProps> = ({ task }) => {
   const { data: tags } = useGetTasksTagsQuery();
 
-  const selectedTags = useSelector(selectSelectedTags);
-  const selectedIds = useSelector(selectSelectedTagIds);
+  const dispatch = useAppDispatch();
 
-  const dispatch = useDispatch();
+  const selectedTags = useAppSelector(selectSelectedTags);
 
+  const selectedIds = new Set(selectedTags.map((t) => t.id));
   const tagsMap = mapFromTags(tags);
 
   const handleFilterByTag = (tag: TaskTag) => () => {
     if (selectedIds.has(tag.id)) {
-      dispatch(onFilterChange({ selectedTags: selectedTags.filter((t) => t.id !== tag.id) }));
+      dispatch(changeFilter({ selectedTags: selectedTags.filter((t) => t.id !== tag.id) }));
     } else {
-      dispatch(onFilterChange({ selectedTags: [...selectedTags, tag] }));
+      dispatch(changeFilter({ selectedTags: [...selectedTags, tag] }));
     }
   };
 
@@ -36,7 +35,7 @@ export const TaskTagsPicker: FC<TaskTagsPickerProps> = ({ task }) => {
     <div className="flex flex-wrap gap-2">
       {task.tags.map((tagId) => {
         const tag = tagsMap[tagId];
-        return <TagBadge key={tagId} label={tag.name} withIcon onClick={handleFilterByTag(tag)} />;
+        return tag && <TagBadge key={tagId} label={tag.name} withIcon onClick={handleFilterByTag(tag)} />;
       })}
     </div>
   );

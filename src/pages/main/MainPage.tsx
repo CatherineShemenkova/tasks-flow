@@ -1,39 +1,34 @@
 import { type FC, Fragment } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Plus } from 'lucide-react';
 
-import { useGetTasksQuery } from '@/api/tasks/tasks.ts';
+import { useGetTasksQuery, useGetTasksTagsQuery } from '@/api/tasks/tasksApi.ts';
 import { PageContainer, PageTitle } from '@/components/page/Page.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { TaskCard } from '@/components/taskCard/TaskCard.tsx';
 import { Pagination } from '@/components/pagination/Pagination.tsx';
 import { TaskFormModal } from '@/components/taskFormModal/TaskFormModal.tsx';
-import { Spinner } from '@/components/ui/spinner.tsx';
+import { ScreenLoader } from '@/components/loader/Loader.tsx';
+import { changePage, selectPagination, selectTasksFilter, selectTasksSort } from '@/store/tasksSlice/tasksSlice';
 import { EmptyPlaceholder } from './components/EmptyPlaceholder.tsx';
 import { TasksFilter } from './components/tasksFilter/TasksFilter.tsx';
-import { selectPagination, selectTasksFilter, selectTasksSort } from '@/store/tasksSlice/selectors.ts';
-import { onPageChange } from '@/store/tasksSlice';
+import { DialogTrigger } from '@/components/ui/dialog.tsx';
+import { useAppDispatch, useAppSelector } from '@/store/store.ts';
 
 export const MainPage: FC = () => {
-  const pagination = useSelector(selectPagination);
-  const sort = useSelector(selectTasksSort);
-  const filter = useSelector(selectTasksFilter);
+  const pagination = useAppSelector(selectPagination);
+  const sort = useAppSelector(selectTasksSort);
+  const filter = useAppSelector(selectTasksFilter);
 
+  const { isLoading: areTasksTagsLoading } = useGetTasksTagsQuery();
   const { data: tasks, isLoading, isError } = useGetTasksQuery({ pagination, sort, filter });
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handlePageChange = (p: number) => {
-    dispatch(onPageChange(p));
+    dispatch(changePage(p));
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex h-screen w-screen items-center justify-center">
-        <Spinner className="size-10" />
-      </div>
-    );
-  }
+  if (isLoading || areTasksTagsLoading) return <ScreenLoader />;
 
   return (
     <PageContainer className="flex flex-col gap-6">
@@ -42,14 +37,16 @@ export const MainPage: FC = () => {
         subtitle="Manage and track your tasks efficiently"
         action={
           <TaskFormModal>
-            <Button size="lg">
-              <Plus strokeWidth={3} /> Create Task
-            </Button>
+            <DialogTrigger asChild>
+              <Button size="lg">
+                <Plus strokeWidth={3} /> Create Task
+              </Button>
+            </DialogTrigger>
           </TaskFormModal>
         }
       />
 
-      <TasksFilter filter={filter} sort={sort} />
+      <TasksFilter />
 
       {tasks?.data.length ? (
         <Fragment>

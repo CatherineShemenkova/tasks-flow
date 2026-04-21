@@ -1,13 +1,6 @@
 import { isBefore, startOfDay } from 'date-fns';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 
-import { type TaskTag, type Task } from '@/types/tasks.ts';
-import { TaskStatus } from '@/constants/tasks.ts';
-
-export function cn(...inputs: ClassValue[]): string {
-  return twMerge(clsx(inputs));
-}
+import { type Task, TaskStatus, type TaskTag } from '@/types/tasks.ts';
 
 export function isOverdue(task: Task): boolean {
   if (task.status === TaskStatus.DONE) return false;

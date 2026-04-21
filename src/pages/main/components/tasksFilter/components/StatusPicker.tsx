@@ -1,33 +1,31 @@
 import { type FC } from 'react';
-import { useDispatch } from 'react-redux';
 import { ListFilter } from 'lucide-react';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx';
-import { onFilterChange } from '@/store/tasksSlice';
+import { changeFilter, selectStatus } from '@/store/tasksSlice/tasksSlice';
+import { useAppDispatch, useAppSelector } from '@/store/store.ts';
 import { ALL_OPTION } from '@/constants';
 import { STATUS_UI_MAP } from '@/constants/ui.ts';
-import { TaskStatus } from '@/constants/tasks.ts';
+import { TaskStatus } from '@/types/tasks.ts';
 
-interface StatusPickerProps {
-  value: string;
-}
+export const StatusPicker: FC = () => {
+  const dispatch = useAppDispatch();
 
-export const StatusPicker: FC<StatusPickerProps> = ({ value }) => {
-  const dispatch = useDispatch();
+  const status = useAppSelector(selectStatus);
 
-  const handleSelectStatus = (status: string) => {
-    dispatch(onFilterChange({ status }));
+  const handleSelectStatus = (status: TaskStatus) => {
+    dispatch(changeFilter({ status }));
   };
 
   return (
-    <Select value={value} onValueChange={handleSelectStatus}>
-      <SelectTrigger className="h-[38px]! w-full">
+    <Select value={status} onValueChange={handleSelectStatus}>
+      <SelectTrigger className="h-9! w-full">
         <ListFilter />
         <SelectValue placeholder="Status" />
       </SelectTrigger>
 
-      <SelectContent>
-        <SelectItem value={ALL_OPTION}>All Status</SelectItem>
+      <SelectContent position="popper">
+        <SelectItem value={ALL_OPTION}>All Statuses</SelectItem>
         <SelectItem value={TaskStatus.TODO}>{STATUS_UI_MAP[TaskStatus.TODO].label}</SelectItem>
         <SelectItem value={TaskStatus.IN_PROGRESS}>{STATUS_UI_MAP[TaskStatus.IN_PROGRESS].label}</SelectItem>
         <SelectItem value={TaskStatus.DONE}>{STATUS_UI_MAP[TaskStatus.DONE].label}</SelectItem>

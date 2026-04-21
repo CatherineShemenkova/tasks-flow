@@ -1,5 +1,3 @@
-import type { TaskStatus, TaskPriority } from '@/constants/tasks.ts';
-
 export interface Task {
   id: string;
   title: string;
@@ -15,4 +13,23 @@ export interface Task {
 export interface TaskTag {
   id: string;
   name: string;
+}
+
+export enum TaskStatus {
+  TODO = 'todo',
+  IN_PROGRESS = 'inProgress',
+  DONE = 'done',
+}
+
+export enum TaskPriority {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+}
+
+export enum SortOption {
+  CREATED_AT_DESC = '-createdAt',
+  CREATED_AT_ASC = 'createdAt',
+  DEADLINE_DESC = '-deadline',
+  DEADLINE_ASC = 'deadline',
 }

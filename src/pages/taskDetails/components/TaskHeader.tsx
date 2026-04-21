@@ -2,12 +2,13 @@ import { type FC, Fragment } from 'react';
 import { useNavigate } from 'react-router';
 import { AlertTriangle, Pencil, Trash2 } from 'lucide-react';
 
-import { useDeleteTaskMutation } from '@/api/tasks/tasks.ts';
+import { useDeleteTaskMutation } from '@/api/tasks/tasksApi.ts';
 import { TaskPriorityBadge } from '@/components/badges/TaskPriorityBadge.tsx';
 import { Badge } from '@/components/ui/badge.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { TaskFormModal } from '@/components/taskFormModal/TaskFormModal.tsx';
 import { Popconfirm } from '@/components/popconfirm/Popconfirm.tsx';
+import { DialogTrigger } from '@/components/ui/dialog.tsx';
 import { PATHS } from '@/routes/paths.ts';
 import type { Task } from '@/types/tasks.ts';
 
@@ -24,9 +25,7 @@ export const TaskHeader: FC<TaskHeaderProps> = ({ task, overdue }) => {
   const handleDelete = () => {
     deleteTask(task.id)
       .unwrap()
-      .then(() => {
-        navigate(PATHS.HOME);
-      });
+      .then(() => navigate(PATHS.HOME));
   };
 
   return (
@@ -49,9 +48,11 @@ export const TaskHeader: FC<TaskHeaderProps> = ({ task, overdue }) => {
 
         <div className="flex gap-2">
           <TaskFormModal task={task}>
-            <Button variant="outline" size="icon">
-              <Pencil />
-            </Button>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="icon" aria-label="Edit task">
+                <Pencil />
+              </Button>
+            </DialogTrigger>
           </TaskFormModal>
 
           <Popconfirm
@@ -60,7 +61,7 @@ export const TaskHeader: FC<TaskHeaderProps> = ({ task, overdue }) => {
             action="Delete"
             onAction={handleDelete}
           >
-            <Button variant="destructive" size="icon">
+            <Button variant="destructive" size="icon" aria-label="Delete task">
               <Trash2 />
             </Button>
           </Popconfirm>

@@ -1,8 +1,8 @@
 import type { ComponentProps } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-react';
 
-import { cn } from '@/utils';
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/utils/shared';
 
 function Pagination({ className, ...props }: ComponentProps<'nav'>) {
   return (

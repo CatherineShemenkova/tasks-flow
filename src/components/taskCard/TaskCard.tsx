@@ -11,7 +11,8 @@ import { StatusSelector } from './components/StatusSelector.tsx';
 import { OverdueMark } from './components/OverdueMark.tsx';
 import { TaskTagsPicker } from './components/TaskTagsPicker.tsx';
 import { type Task } from '@/types/tasks.ts';
-import { cn, isOverdue } from '@/utils';
+import { cn } from '@/utils/shared';
+import { isOverdue } from '@/utils/tasks.ts';
 import { PATHS } from '@/routes/paths.ts';
 
 interface TaskCardProps {

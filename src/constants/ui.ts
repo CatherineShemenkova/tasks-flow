@@ -1,7 +1,13 @@
+import type { ComponentType } from 'react';
 import { Circle, CircleCheckBig, Clock } from 'lucide-react';
 
-import { TaskPriority, TaskStatus } from '@/constants/tasks.ts';
-import type { PriorityConfig, StatusConfig } from '@/types';
+import { TaskPriority, TaskStatus } from '@/types/tasks.ts';
+import type { WithClassName } from '@/types/utils.ts';
+
+interface PriorityConfig {
+  label: string;
+  ui: string;
+}
 
 export const PRIORITY_UI_MAP: Record<TaskPriority, PriorityConfig> = {
   [TaskPriority.LOW]: { label: 'Low', ui: 'border-priority-low/50 bg-priority-low/20 text-priority-low' },
@@ -11,6 +17,12 @@ export const PRIORITY_UI_MAP: Record<TaskPriority, PriorityConfig> = {
   },
   [TaskPriority.HIGH]: { label: 'High', ui: 'border-priority-high/50 bg-priority-high/20 text-priority-high' },
 };
+
+interface StatusConfig {
+  label: string;
+  ui: string;
+  icon: ComponentType<WithClassName>;
+}
 
 export const STATUS_UI_MAP: Record<TaskStatus, StatusConfig> = {
   [TaskStatus.TODO]: {

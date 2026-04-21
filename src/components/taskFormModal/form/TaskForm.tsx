@@ -2,7 +2,7 @@ import { type FC, useEffect, useMemo, useRef } from 'react';
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useCreateTaskMutation, useGetTasksTagsQuery, useUpdateTaskMutation } from '@/api/tasks/tasks.ts';
+import { useCreateTaskMutation, useGetTasksTagsQuery, useUpdateTaskMutation } from '@/api/tasks/tasksApi.ts';
 import { DialogClose, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx';
 import { FieldGroup } from '@/components/ui/field.tsx';
 import { TitleController } from './components/TitleController.tsx';
@@ -15,12 +15,13 @@ import { DeadlineController } from './components/DeadlineController.tsx';
 import { TagsController } from './components/TagsController.tsx';
 import type { Task } from '@/types/tasks.ts';
 import { initialValues, type TaskApiRequest, validationSchema } from './form.ts';
-import { mapTaskToFormValues } from './utils.ts';
+import { mapTaskToFormValues } from './mapper.ts';
 
 interface TaskFormProps {
   task?: Task;
 }
 
+/* Task and tags are expected to be provided synchronously  */
 export const TaskForm: FC<TaskFormProps> = ({ task }) => {
   const isEditing = !!task;
 
@@ -36,7 +37,7 @@ export const TaskForm: FC<TaskFormProps> = ({ task }) => {
 
   const methods = useForm({
     resolver: zodResolver(validationSchema),
-    values: defaultValues,
+    defaultValues,
     mode: 'onBlur',
   });
 
@@ -66,9 +67,9 @@ export const TaskForm: FC<TaskFormProps> = ({ task }) => {
             <TitleController />
             <DescriptionController />
             <StatusController />
-            <PriorityController />
             <DeadlineController />
             <TagsController tags={tags} />
+            <PriorityController />
           </FieldGroup>
 
           <DialogFooter>

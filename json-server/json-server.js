@@ -1,6 +1,8 @@
-const jsonServer = require('json-server');
+import jsonServer from 'json-server';
+import path from 'path';
+
 const server = jsonServer.create();
-const router = jsonServer.router('db.json');
+const router = jsonServer.router(path.resolve(import.meta.dirname, 'db.json'));
 const middlewares = jsonServer.defaults();
 
 server.use(middlewares);
@@ -17,8 +19,7 @@ server.use((req, res, next) => {
     const collection = db[resource];
 
     if (collection) {
-      const filtered = collection.filter((item) => item.tags && requiredTags.every((tag) => item.tags.includes(tag)));
-      return res.json(filtered);
+      res.locals.data = collection.filter((item) => item.tags && requiredTags.every((tag) => item.tags.includes(tag)));
     }
   }
 

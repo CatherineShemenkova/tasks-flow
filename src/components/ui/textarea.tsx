@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react';
 
-import { cn } from '@/utils';
+import { cn } from '@/utils/shared';
 
 interface TextareaProps extends ComponentProps<'textarea'> {
   error?: boolean;

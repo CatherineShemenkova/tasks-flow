@@ -1,73 +1,95 @@
-# React + TypeScript + Vite
+# Tasks Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## 🚀 Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+# 1. Install root dependencies
+npm install
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 2. Start the application
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+**Last command simultaneously runs:**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `vite dev-server` – client (frontend)
+- `json-server` – API mock / backend simulation
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+> The application will automatically open at http://localhost:5173
+--- 
+
+## 🛠 Tech Stack
+- React 19 + compiler
+- TypeScript
+- React Router v7
+- RTK Query – data fetching & caching
+- JSON Server
+- react-hook-form + zod - forms & validation
+- shadcn/ui + Tailwind CSS – UI & styling
+- Vite – build tool
+---
+
+## 📁 Architecture
 ```
+src/
+├── api/
+│   ├── tasks/           # All API calls encapsulated in tasksApi (RTK Query)
+├── components/
+│   ├── ui/              # ❗️Auto-generated shadcn/ui components
+│   ├── ...              # Shared components
+├── constants/           # Shared constants (default values, ui configs, etc.)
+├── context/             # Context providers for non-Redux features
+├── env/                 # Typed .env variables access
+├── layout/              # Global wrapper, contains 'Outlet' and static components independent of router (such as Header, ThemeToggle, Footer etc.)
+├── pages/               # App pages
+├── routes/              # PATHS constant for type-safe navigation
+├── store/               # Redux store (slices, reducers, configs)
+├── types/               # Global TypeScript types (Task, Tag, Status, Priority)
+└── utils/               # Global and feature-oriented utilities
+```
+---
+
+## 🌟 Features
+- ✅ Full CRUD operations for tasks
+- ✅ Tag management (list, create new tags)
+- ✅ Filtering: by status, priority, tag
+- ✅ Search (debounced to optimize API requests)
+- ✅ Sorting: by creation date, by deadline
+- ✅ Pagination
+- ✅ Visual highlighting of overdue tasks
+- ✅ Quick status change via task card
+- ✅ Click on tag → filter by tag
+- ✅ Click on card → task details page
+- ✅ Delete confirmation dialog
+- ✅ Autocomplete for tags with multi-select and custom tag creation
+- ✅ Dark/light theme toggle
+- ✅ Modern UI with UX patterns
+---
+
+## 📝 API Endpoints (JSON Server)
+| Method | Endpoint     | Description                             |
+|--------|--------------|-----------------------------------------|
+| GET    | `/tasks`     | Get tasks (with filtering & pagination) |
+| GET    | `/tasks/:id` | Get task by id                          |
+| POST   | `/tasks`     | Create task                             |
+| PUT    | `/tasks/:id` | Full update                             |
+| PATCH  | `/tasks/:id` | Partial update                          |
+| DELETE | `/tasks/:id` | Delete task                             |
+| GET    | `/tags`      | Get tags list                           |
+| POST   | `/tags`      | Create tag                              |
+
+> 📌 **Note on filtering**:
+> 
+> JSON Server does not natively support filtering by nested arrays (`tags: TaskTag[]`). 
+> A **custom middleware** was implemented to intercept `/tasks` requests and transform tag filter parameters into valid data queries.
+
+> ⚠️ **Error handling**:
+> 
+> Error handling has been implemented for all **mutating** operations (POST, PUT, PATCH, DELETE). 
+> When request errors occur, the user receives appropriate notifications via toast messages.
+---
+
+## ❗️ Important for Review
+Components in the `components/ui` folder are completely generated by the shadcn/ui CLI. Their code **does not require** review.

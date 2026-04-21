@@ -18,7 +18,7 @@ export const TitleController: FC = () => {
       <Input
         {...register('title')}
         id="title"
-        className="h-[38px]"
+        className="h-10 text-sm"
         placeholder="Enter task title (min 5 characters)"
         error={!!fieldState.error}
       />

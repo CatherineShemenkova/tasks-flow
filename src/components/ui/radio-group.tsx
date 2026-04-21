@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
 
-import { cn } from '@/utils';
+import { cn } from '@/utils/shared';
 
 function RadioGroup({ className, ...props }: ComponentProps<typeof RadioGroupPrimitive.Root>) {
   return <RadioGroupPrimitive.Root data-slot="radio-group" className={cn('grid w-full gap-2', className)} {...props} />;

@@ -1,32 +1,30 @@
 import { type FC } from 'react';
-import { useDispatch } from 'react-redux';
 import { ListFilter } from 'lucide-react';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx';
-import { onFilterChange } from '@/store/tasksSlice';
+import { changeFilter, selectPriority } from '@/store/tasksSlice/tasksSlice';
+import { useAppDispatch, useAppSelector } from '@/store/store.ts';
 import { ALL_OPTION } from '@/constants';
 import { PRIORITY_UI_MAP } from '@/constants/ui.ts';
-import { TaskPriority } from '@/constants/tasks.ts';
+import { TaskPriority } from '@/types/tasks.ts';
 
-interface PriorityPickerProps {
-  value: string;
-}
+export const PriorityPicker: FC = () => {
+  const dispatch = useAppDispatch();
 
-export const PriorityPicker: FC<PriorityPickerProps> = ({ value }) => {
-  const dispatch = useDispatch();
+  const priority = useAppSelector(selectPriority);
 
-  const handleSelectPriority = (priority: string) => {
-    dispatch(onFilterChange({ priority }));
+  const handleSelectPriority = (priority: TaskPriority) => {
+    dispatch(changeFilter({ priority }));
   };
 
   return (
-    <Select value={value} onValueChange={handleSelectPriority}>
-      <SelectTrigger className="h-[38px]! w-full">
+    <Select value={priority} onValueChange={handleSelectPriority}>
+      <SelectTrigger className="h-9! w-full">
         <ListFilter />
         <SelectValue placeholder="Priority" />
       </SelectTrigger>
 
-      <SelectContent>
+      <SelectContent position="popper">
         <SelectItem value={ALL_OPTION}>All Priority</SelectItem>
         <SelectItem value={TaskPriority.HIGH}>{PRIORITY_UI_MAP[TaskPriority.HIGH].label}</SelectItem>
         <SelectItem value={TaskPriority.MEDIUM}>{PRIORITY_UI_MAP[TaskPriority.MEDIUM].label}</SelectItem>

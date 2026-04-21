@@ -3,7 +3,7 @@ import { NavLink, useParams } from 'react-router';
 import { ArrowLeft, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 
-import { useGetTaskByIdQuery, useGetTasksTagsQuery } from '@/api/tasks/tasks.ts';
+import { useGetTaskByIdQuery, useGetTasksTagsQuery } from '@/api/tasks/tasksApi.ts';
 import { PageContainer } from '@/components/page/Page.tsx';
 import { NonExistingPlaceholder } from './components/NonExistingPlaceholder.tsx';
 import { TaskHeader } from './components/TaskHeader.tsx';
@@ -11,21 +11,22 @@ import { TaskStatusBadge } from '@/components/badges/TaskStatusBadge.tsx';
 import { Label } from '@/components/ui/label.tsx';
 import { TagBadge } from '@/components/badges/TagBadge.tsx';
 import { BUTTON_VARIANTS } from '@/components/ui/button.tsx';
+import { ScreenLoader } from '@/components/loader/Loader.tsx';
 import { PATHS } from '@/routes/paths.ts';
-import { isOverdue, mapFromTags, cn } from '@/utils';
+import { isOverdue, mapFromTags } from '@/utils/tasks.ts';
+import { cn } from '@/utils/shared';
 
-export const TaskPage: FC = () => {
+export const TaskDetailsPage: FC = () => {
   const { id } = useParams();
 
-  const { data: task } = useGetTaskByIdQuery(id!);
+  const { data: task, isLoading } = useGetTaskByIdQuery(id!);
   const { data: tags } = useGetTasksTagsQuery();
 
   const overdue = !!task && isOverdue(task);
   const tagsMap = mapFromTags(tags);
 
-  if (!task) {
-    return <NonExistingPlaceholder />;
-  }
+  if (isLoading) return <ScreenLoader />;
+  if (!task) return <NonExistingPlaceholder />;
 
   return (
     <PageContainer className="flex flex-col items-start gap-6">
@@ -44,7 +45,7 @@ export const TaskPage: FC = () => {
 
         {task.description && <p className="text-card-foreground leading-relaxed">{task.description}</p>}
 
-        <div className="flex w-full items-end justify-between">
+        <div className="flex w-full flex-wrap items-end justify-between gap-2">
           <div className="flex flex-col gap-1">
             <Label className="text-muted-foreground">Deadline</Label>
 
@@ -65,9 +66,10 @@ export const TaskPage: FC = () => {
           <Label className="text-muted-foreground">Tags</Label>
 
           <div className="flex flex-wrap gap-2">
-            {task.tags.map((tagId) => (
-              <TagBadge key={tagId} label={tagsMap[tagId].name} withIcon />
-            ))}
+            {task.tags.map((tagId) => {
+              const tag = tagsMap[tagId];
+              return tag && <TagBadge key={tag.id} label={tag.name} withIcon />;
+            })}
           </div>
         </div>
 

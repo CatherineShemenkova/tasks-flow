@@ -1,72 +1,63 @@
-import { type FC, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Check, ChevronsUpDown, Tag as TagIcon } from 'lucide-react';
+import { type FC, useRef } from 'react';
+import { ChevronDownIcon, TagIcon } from 'lucide-react';
 
-import { useGetTasksTagsQuery } from '@/api/tasks/tasks.ts';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx';
-import { Button } from '@/components/ui/button.tsx';
+import { useGetTasksTagsQuery } from '@/api/tasks/tasksApi.ts';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command.tsx';
-import { selectSelectedTagIds } from '@/store/tasksSlice/selectors.ts';
-import { onFilterChange } from '@/store/tasksSlice';
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxTrigger,
+} from '@/components/ui/combobox.tsx';
+import { Button } from '@/components/ui/button';
+import { useAppDispatch, useAppSelector } from '@/store/store.ts';
+import { changeFilter, selectSelectedTags } from '@/store/tasksSlice/tasksSlice';
 import type { TaskTag } from '@/types/tasks.ts';
-import { cn } from '@/utils';
 
-interface TagsPickerProps {
-  selectedTags: TaskTag[];
-}
-
-export const TagsPicker: FC<TagsPickerProps> = ({ selectedTags }) => {
+export const TagsPicker: FC = () => {
   const { data: tags } = useGetTasksTagsQuery();
 
-  const dispatch = useDispatch();
+  const anchor = useRef<HTMLButtonElement>(null);
 
-  const [isOpen, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
 
-  const selectedIds = useSelector(selectSelectedTagIds);
+  const selectedTags = useAppSelector(selectSelectedTags);
 
-  const handleSelect = (tag: TaskTag) => () => {
-    if (selectedIds.has(tag.id)) {
-      dispatch(onFilterChange({ selectedTags: selectedTags.filter((t) => t.id !== tag.id) }));
-    } else {
-      dispatch(onFilterChange({ selectedTags: [...selectedTags, tag] }));
-    }
+  const handleTagsChange = (tags: TaskTag[]) => {
+    dispatch(changeFilter({ selectedTags: tags }));
   };
 
   return (
-    <Popover open={isOpen} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button className="h-[38px]! justify-between" variant="outline" size="lg">
-          <TagIcon />
-          {selectedTags.length > 0 ? `${selectedTags.length} tags` : 'Filter by tags'}
-          <ChevronsUpDown className="shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
+    <Combobox
+      items={tags}
+      value={selectedTags}
+      onValueChange={handleTagsChange}
+      isItemEqualToValue={(a, b) => a.id === b.id}
+      multiple
+    >
+      <ComboboxTrigger
+        render={
+          <Button ref={anchor} variant="outline" size="lg" className="justify-between font-normal">
+            <TagIcon />
+            {selectedTags.length > 0 ? `${selectedTags.length} tags` : 'Filter by tags'}
+            <ChevronDownIcon className="text-muted-foreground" />
+          </Button>
+        }
+      />
 
-      <PopoverContent className="p-0" align="end">
-        <Command>
-          <CommandInput placeholder="Search tags..." />
-
-          <CommandList>
-            <CommandEmpty>No tags found</CommandEmpty>
-
-            <CommandGroup>
-              {tags?.map((tag) => (
-                <CommandItem key={tag.id} value={tag.name} onSelect={handleSelect(tag)}>
-                  <Check className={cn(selectedIds.has(tag.id) ? 'opacity-100' : 'opacity-0')} />
-                  {tag.name}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+      <ComboboxContent anchor={anchor}>
+        <ComboboxInput showTrigger={false} placeholder="Search" />
+        <ComboboxEmpty>No tags found</ComboboxEmpty>
+        <ComboboxList>
+          {(tag: TaskTag) => (
+            <ComboboxItem key={tag.id} value={tag}>
+              {tag.name}
+            </ComboboxItem>
+          )}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
   );
 };

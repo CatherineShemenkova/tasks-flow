@@ -1,13 +1,12 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router';
 import { Provider } from 'react-redux';
 import { Toaster } from 'sonner';
 
+import { TooltipProvider } from '@/components/ui/tooltip.tsx';
 import { Layout } from '@/layout/Layout.tsx';
-import { IntermediatePageGuard } from '@/components/guards/IntermediatePageGuarg.tsx';
 import { ThemeProvider } from '@/context/theme/ThemeProvider.tsx';
-import { Theme } from '@/context/theme/constants.ts';
 import { MainPage } from '@/pages/main/MainPage.tsx';
 import { store } from '@/store/store.ts';
 import { PATHS } from '@/routes/paths.ts';
@@ -23,10 +22,11 @@ const router = createBrowserRouter([
       {
         path: PATHS.TASKS,
         children: [
-          { index: true, Component: IntermediatePageGuard },
+          { index: true, element: <Navigate to={PATHS.HOME} /> },
           {
             path: ':id',
-            lazy: () => import('./pages/task/TaskPage.tsx').then((m) => ({ Component: m.TaskPage })),
+            lazy: () =>
+              import('./pages/taskDetails/TaskDetailsPage.tsx').then((m) => ({ Component: m.TaskDetailsPage })),
           },
         ],
       },
@@ -37,9 +37,12 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
-      <ThemeProvider defaultTheme={Theme.SYSTEM}>
+      <ThemeProvider>
         <Toaster position="top-right" expand={false} richColors />
-        <RouterProvider router={router} />
+
+        <TooltipProvider>
+          <RouterProvider router={router} />
+        </TooltipProvider>
       </ThemeProvider>
     </Provider>
   </StrictMode>

@@ -1,5 +1,4 @@
 import { type FC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { TagBadge } from '@/components/badges/TagBadge.tsx';
 import { SearchInput } from './components/SearchInput.tsx';
@@ -7,45 +6,46 @@ import { TagsPicker } from './components/TagsPicker.tsx';
 import { StatusPicker } from './components/StatusPicker.tsx';
 import { PriorityPicker } from './components/PriorityPicker.tsx';
 import { SortPicker } from './components/SortPicker.tsx';
-import { selectHasActiveFilters } from '@/store/tasksSlice/selectors.ts';
-import { onFilterChange, onSingleFilterReset, onFilterReset } from '@/store/tasksSlice';
+import {
+  changeFilter,
+  resetFilter,
+  resetSingleFilter,
+  selectHasActiveFilters,
+  selectTasksFilter,
+} from '@/store/tasksSlice/tasksSlice';
+import { useAppDispatch, useAppSelector } from '@/store/store.ts';
 import type { TasksSliceFilter } from '@/store/tasksSlice/types.ts';
-import { type TaskTag } from '@/types/tasks.ts';
-import { type TaskPriority, type TaskStatus, SortOption } from '@/constants/tasks.ts';
-import { PRIORITY_UI_MAP, STATUS_UI_MAP } from '@/constants/ui.ts';
+import { TaskPriority, TaskStatus, type TaskTag } from '@/types/tasks.ts';
+import { PRIORITY_UI_MAP, STATUS_UI_MAP } from '@/constants/ui';
 import { ALL_OPTION } from '@/constants';
 
-interface TasksFilterProps {
-  filter: TasksSliceFilter;
-  sort: SortOption;
-}
+export const TasksFilter: FC = () => {
+  const dispatch = useAppDispatch();
 
-export const TasksFilter: FC<TasksFilterProps> = ({ filter, sort }) => {
-  const dispatch = useDispatch();
-
-  const hasActiveFilters = useSelector(selectHasActiveFilters);
+  const filter = useAppSelector(selectTasksFilter);
+  const hasActiveFilters = useAppSelector(selectHasActiveFilters);
 
   const handleResetTag = (tag: TaskTag) => () => {
     const selectedTags = filter.selectedTags.filter((t) => t.id !== tag.id);
-    dispatch(onFilterChange({ selectedTags }));
+    dispatch(changeFilter({ selectedTags }));
   };
 
   const handleResetSingleFilter = (key: keyof TasksSliceFilter) => () => {
-    dispatch(onSingleFilterReset(key));
+    dispatch(resetSingleFilter(key));
   };
 
   const handleReset = () => {
-    dispatch(onFilterReset());
+    dispatch(resetFilter());
   };
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col flex-wrap gap-4 md:flex-row md:[&_>_button]:w-[180px]">
-        <SearchInput value={filter.search} />
-        <TagsPicker selectedTags={filter.selectedTags} />
-        <StatusPicker value={filter.status} />
-        <PriorityPicker value={filter.priority} />
-        <SortPicker value={sort} />
+      <div className="flex flex-col flex-wrap gap-4 md:flex-row md:[&_>_button]:w-45">
+        <SearchInput />
+        <TagsPicker />
+        <StatusPicker />
+        <PriorityPicker />
+        <SortPicker />
       </div>
 
       {hasActiveFilters && (

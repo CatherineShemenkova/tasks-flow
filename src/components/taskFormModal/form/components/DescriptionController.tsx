@@ -4,7 +4,7 @@ import { useController, useFormContext, Watch } from 'react-hook-form';
 import { FormFieldError, FormFieldLabel } from '@/components/formField/FormField.tsx';
 import { Field } from '@/components/ui/field.tsx';
 import { Textarea } from '@/components/ui/textarea.tsx';
-import { cn } from '@/utils';
+import { cn } from '@/utils/shared';
 import { DESCRIPTION_MAX_LENGTH, type TaskFormValues } from '../form.ts';
 
 export const DescriptionController: FC = () => {
@@ -34,6 +34,7 @@ export const DescriptionController: FC = () => {
       <Textarea
         {...register('description')}
         id="description"
+        className="text-sm"
         placeholder="Enter task description (optional)"
         error={!!fieldState.error}
         rows={3}

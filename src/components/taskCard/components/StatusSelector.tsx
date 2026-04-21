@@ -1,17 +1,17 @@
 import type { FC } from 'react';
 
-import { usePartialUpdateTaskMutation } from '@/api/tasks/tasks.ts';
+import { usePartialUpdateTaskMutation } from '@/api/tasks/tasksApi.ts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx';
 import { TaskStatusBadge } from '@/components/badges/TaskStatusBadge.tsx';
-import { type Task } from '@/types/tasks.ts';
-import { TaskStatus } from '@/constants/tasks.ts';
+import { DelayedLoader } from '@/components/loader/Loader.tsx';
+import { type Task, TaskStatus } from '@/types/tasks.ts';
 
 interface StatusSelectorProps {
   task: Task;
 }
 
 export const StatusSelector: FC<StatusSelectorProps> = ({ task }) => {
-  const [updateTaskStatus] = usePartialUpdateTaskMutation();
+  const [updateTaskStatus, { isLoading }] = usePartialUpdateTaskMutation();
 
   const handleStatusChange = (newStatus: TaskStatus) => {
     updateTaskStatus({ id: task.id, status: newStatus });
@@ -25,10 +25,11 @@ export const StatusSelector: FC<StatusSelectorProps> = ({ task }) => {
       >
         <SelectValue>
           <TaskStatusBadge taskStatus={task.status} />
+          {isLoading && <DelayedLoader />}
         </SelectValue>
       </SelectTrigger>
 
-      <SelectContent>
+      <SelectContent position="popper">
         <SelectItem value={TaskStatus.TODO}>
           <TaskStatusBadge taskStatus={TaskStatus.TODO} />
         </SelectItem>
