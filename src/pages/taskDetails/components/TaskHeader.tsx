@@ -1,4 +1,4 @@
-import { type FC, Fragment } from 'react';
+import type { FC } from 'react';
 import { useNavigate } from 'react-router';
 import { AlertTriangle, Pencil, Trash2 } from 'lucide-react';
 
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button.tsx';
 import { TaskFormModal } from '@/components/taskFormModal/TaskFormModal.tsx';
 import { Popconfirm } from '@/components/popconfirm/Popconfirm.tsx';
 import { DialogTrigger } from '@/components/ui/dialog.tsx';
+import { PageTitle } from '@/components/page/Page.tsx';
 import { PATHS } from '@/routes/paths.ts';
 import type { Task } from '@/types/tasks.ts';
 
@@ -29,44 +30,42 @@ export const TaskHeader: FC<TaskHeaderProps> = ({ task, overdue }) => {
   };
 
   return (
-    <Fragment>
-      <div className="flex w-full justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <TaskPriorityBadge priority={task.priority} />
+    <div className="flex w-full justify-between">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <TaskPriorityBadge priority={task.priority} />
 
-            {overdue && (
-              <Badge variant="destructive" className="gap-1">
-                <AlertTriangle />
-                Overdue
-              </Badge>
-            )}
-          </div>
-
-          <h1 className="text-card-foreground text-2xl font-bold md:text-3xl">{task.title}</h1>
+          {overdue && (
+            <Badge variant="destructive">
+              <AlertTriangle />
+              Overdue
+            </Badge>
+          )}
         </div>
 
-        <div className="flex gap-2">
-          <TaskFormModal task={task}>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="Edit task">
-                <Pencil />
-              </Button>
-            </DialogTrigger>
-          </TaskFormModal>
-
-          <Popconfirm
-            title="Delete Task"
-            description="Are you sure you want to delete this task? This action cannot be undone."
-            action="Delete"
-            onAction={handleDelete}
-          >
-            <Button variant="destructive" size="icon" aria-label="Delete task">
-              <Trash2 />
-            </Button>
-          </Popconfirm>
-        </div>
+        <PageTitle title={task.title} subtitle={task.description} />
       </div>
-    </Fragment>
+
+      <div className="flex gap-2">
+        <TaskFormModal task={task}>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="icon" aria-label="Edit task">
+              <Pencil />
+            </Button>
+          </DialogTrigger>
+        </TaskFormModal>
+
+        <Popconfirm
+          title="Delete Task"
+          description="Are you sure you want to delete this task? This action cannot be undone."
+          action="Delete"
+          onAction={handleDelete}
+        >
+          <Button variant="destructive" size="icon" aria-label="Delete task">
+            <Trash2 />
+          </Button>
+        </Popconfirm>
+      </div>
+    </div>
   );
 };

@@ -3,7 +3,7 @@ import { Search } from 'lucide-react';
 
 import { Input } from '@/components/ui/input.tsx';
 import { changeFilter, selectSearch } from '@/store/tasksSlice/tasksSlice';
-import { useAppDispatch, useAppSelector } from '@/store/store.ts';
+import { useAppDispatch, useAppSelector } from '@/store/hooks.ts';
 
 export const SearchInput: FC = () => {
   const dispatch = useAppDispatch();
@@ -13,11 +13,11 @@ export const SearchInput: FC = () => {
   const [localSearch, setLocalSearch] = useState(search);
 
   useEffect(() => {
-    const handler = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       dispatch(changeFilter({ search: localSearch }));
     }, 300);
 
-    return () => clearTimeout(handler);
+    return () => clearTimeout(timeoutId);
   }, [localSearch, dispatch]);
 
   useEffect(() => {

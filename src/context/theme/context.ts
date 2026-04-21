@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-import { Theme } from './constants.ts';
+import { Theme } from './types.ts';
 
 export type ThemeProviderState = {
   theme: Theme;

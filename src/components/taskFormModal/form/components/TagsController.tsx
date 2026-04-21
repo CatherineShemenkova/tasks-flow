@@ -20,8 +20,8 @@ import { FormFieldError, FormFieldLabel } from '@/components/formField/FormField
 import { DelayedLoader } from '@/components/loader/Loader.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import type { TaskTag } from '@/types/tasks.ts';
+import { cn, itemEqualToItemId } from '@/utils/ui.ts';
 import type { TaskFormValues } from '../form.ts';
-import { cn } from '@/utils/shared.ts';
 
 interface TagsControllerProps {
   tags?: TaskTag[];
@@ -30,11 +30,11 @@ interface TagsControllerProps {
 export const TagsController: FC<TagsControllerProps> = ({ tags }) => {
   const [createTag, { isLoading }] = useCreateTaskTagMutation();
 
-  const anchor = useComboboxAnchor();
-
   const { control, formState } = useFormContext<TaskFormValues>();
 
   const [search, setSearch] = useState('');
+
+  const anchor = useComboboxAnchor();
 
   return (
     <Field>
@@ -61,7 +61,7 @@ export const TagsController: FC<TagsControllerProps> = ({ tags }) => {
                 onValueChange={field.onChange}
                 inputValue={search}
                 onInputValueChange={setSearch}
-                isItemEqualToValue={(a, b) => a.id === b.id}
+                isItemEqualToValue={itemEqualToItemId}
                 multiple
               >
                 <ComboboxChips ref={anchor} className={cn('min-h-10', fieldState.error && 'border-destructive')}>
@@ -84,7 +84,9 @@ export const TagsController: FC<TagsControllerProps> = ({ tags }) => {
                   <ComboboxEmpty className="px-3">
                     <Button className="pointer-events-auto max-w-full" variant="secondary" onClick={handleCreateTag}>
                       <Plus />
+
                       <span className="truncate">Create &quot;{search}&quot;</span>
+
                       {isLoading && <DelayedLoader />}
                     </Button>
                   </ComboboxEmpty>

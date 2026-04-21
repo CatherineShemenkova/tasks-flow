@@ -8,11 +8,11 @@ import { TaskCard } from '@/components/taskCard/TaskCard.tsx';
 import { Pagination } from '@/components/pagination/Pagination.tsx';
 import { TaskFormModal } from '@/components/taskFormModal/TaskFormModal.tsx';
 import { ScreenLoader } from '@/components/loader/Loader.tsx';
-import { changePage, selectPagination, selectTasksFilter, selectTasksSort } from '@/store/tasksSlice/tasksSlice';
+import { DialogTrigger } from '@/components/ui/dialog.tsx';
 import { EmptyPlaceholder } from './components/EmptyPlaceholder.tsx';
 import { TasksFilter } from './components/tasksFilter/TasksFilter.tsx';
-import { DialogTrigger } from '@/components/ui/dialog.tsx';
-import { useAppDispatch, useAppSelector } from '@/store/store.ts';
+import { changePage, selectPagination, selectTasksFilter, selectTasksSort } from '@/store/tasksSlice/tasksSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks.ts';
 
 export const MainPage: FC = () => {
   const pagination = useAppSelector(selectPagination);

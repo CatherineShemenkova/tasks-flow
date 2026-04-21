@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 import { Label as LabelPrimitive } from 'radix-ui';
 
-import { cn } from '@/utils/shared';
+import { cn } from '@/utils/ui.ts';
 
 function Label({ className, ...props }: ComponentProps<typeof LabelPrimitive.Root>) {
   return (

@@ -1,4 +1,4 @@
-import { type FC, useEffect, useRef, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
 import { Spinner } from '@/components/ui/spinner.tsx';
 
@@ -13,16 +13,14 @@ interface DelayedLoaderProps {
 }
 
 export const DelayedLoader: FC<DelayedLoaderProps> = ({ delay = 500 }) => {
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-
   const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
-    timer.current = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       setShowLoader(true);
     }, delay);
 
-    return () => clearTimeout(timer.current);
+    return () => clearTimeout(timeoutId);
   }, [delay]);
 
   return showLoader ? <Spinner className="text-muted-foreground" /> : null;

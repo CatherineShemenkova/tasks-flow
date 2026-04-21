@@ -65,6 +65,7 @@ export const tasksApi = createApi({
       query: ({ id, ...patch }) => ({
         url: `/tasks/${id}`,
         method: 'PATCH',
+        // "updatedAt" should be updated on server
         body: { ...patch, updatedAt: new Date().toISOString() },
       }),
       invalidatesTags: (_result, _error, task) => [{ type: ApiTag.TASK, id: task.id }, ApiTag.TASKS],

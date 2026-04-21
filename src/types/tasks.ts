@@ -1,13 +1,15 @@
+import type { ISODateString } from '@/types/shared.ts';
+
 export interface Task {
   id: string;
   title: string;
   description?: string;
   status: TaskStatus;
   priority: TaskPriority;
-  deadline: string;
-  tags: string[];
-  createdAt: string;
-  updatedAt: string;
+  tags: Array<TaskTag['id']>;
+  deadline: ISODateString;
+  createdAt: ISODateString;
+  updatedAt: ISODateString;
 }
 
 export interface TaskTag {

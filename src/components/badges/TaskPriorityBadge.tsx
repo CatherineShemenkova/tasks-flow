@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import { Badge } from '@/components/ui/badge.tsx';
 import { PRIORITY_UI_MAP } from '@/constants/ui.ts';
 import { TaskPriority } from '@/types/tasks.ts';
-import { cn } from '@/utils/shared';
+import { cn } from '@/utils/ui';
 
 interface TaskPriorityBadgeProps {
   priority: TaskPriority;

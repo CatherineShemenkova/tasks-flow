@@ -2,7 +2,7 @@ import { type FC, type MouseEventHandler } from 'react';
 import { Tag, X } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge.tsx';
-import { cn } from '@/utils/shared';
+import { cn } from '@/utils/ui.ts';
 
 interface TagBadgeProps {
   label: string;

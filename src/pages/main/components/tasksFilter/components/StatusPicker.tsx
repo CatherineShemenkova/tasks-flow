@@ -3,10 +3,10 @@ import { ListFilter } from 'lucide-react';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx';
 import { changeFilter, selectStatus } from '@/store/tasksSlice/tasksSlice';
-import { useAppDispatch, useAppSelector } from '@/store/store.ts';
 import { ALL_OPTION } from '@/constants';
 import { STATUS_UI_MAP } from '@/constants/ui.ts';
 import { TaskStatus } from '@/types/tasks.ts';
+import { useAppDispatch, useAppSelector } from '@/store/hooks.ts';
 
 export const StatusPicker: FC = () => {
   const dispatch = useAppDispatch();
@@ -26,9 +26,12 @@ export const StatusPicker: FC = () => {
 
       <SelectContent position="popper">
         <SelectItem value={ALL_OPTION}>All Statuses</SelectItem>
-        <SelectItem value={TaskStatus.TODO}>{STATUS_UI_MAP[TaskStatus.TODO].label}</SelectItem>
-        <SelectItem value={TaskStatus.IN_PROGRESS}>{STATUS_UI_MAP[TaskStatus.IN_PROGRESS].label}</SelectItem>
-        <SelectItem value={TaskStatus.DONE}>{STATUS_UI_MAP[TaskStatus.DONE].label}</SelectItem>
+
+        {Object.values(TaskStatus).map((status) => (
+          <SelectItem key={status} value={status}>
+            {STATUS_UI_MAP[status].label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

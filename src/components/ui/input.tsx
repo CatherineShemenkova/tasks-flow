@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react';
 
-import { cn } from '@/utils/shared';
+import { cn } from '@/utils/ui.ts';
 
 interface InputProps extends ComponentProps<'input'> {
   error?: boolean;

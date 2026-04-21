@@ -2,8 +2,8 @@ import { isBefore, startOfDay } from 'date-fns';
 
 import { type Task, TaskStatus, type TaskTag } from '@/types/tasks.ts';
 
-export function isOverdue(task: Task): boolean {
-  if (task.status === TaskStatus.DONE) return false;
+export function isOverdue(task?: Task): boolean {
+  if (!task || task.status === TaskStatus.DONE) return false;
 
   return isBefore(new Date(task.deadline), startOfDay(new Date()));
 }

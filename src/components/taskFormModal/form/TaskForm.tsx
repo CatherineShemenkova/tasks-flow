@@ -1,4 +1,4 @@
-import { type FC, useEffect, useMemo, useRef } from 'react';
+import { type FC, Fragment, useEffect, useMemo, useRef } from 'react';
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -21,7 +21,6 @@ interface TaskFormProps {
   task?: Task;
 }
 
-/* Task and tags are expected to be provided synchronously  */
 export const TaskForm: FC<TaskFormProps> = ({ task }) => {
   const isEditing = !!task;
 
@@ -56,7 +55,7 @@ export const TaskForm: FC<TaskFormProps> = ({ task }) => {
   };
 
   return (
-    <>
+    <Fragment>
       <DialogHeader>
         <DialogTitle>{isEditing ? 'Edit Task' : 'Create New Task'}</DialogTitle>
       </DialogHeader>
@@ -86,6 +85,6 @@ export const TaskForm: FC<TaskFormProps> = ({ task }) => {
           </DialogFooter>
         </form>
       </FormProvider>
-    </>
+    </Fragment>
   );
 };

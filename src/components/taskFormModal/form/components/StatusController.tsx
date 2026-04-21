@@ -6,7 +6,7 @@ import { Field } from '@/components/ui/field.tsx';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx';
 import { TaskStatusBadge } from '@/components/badges/TaskStatusBadge.tsx';
 import { TaskStatus } from '@/types/tasks.ts';
-import { cn } from '@/utils/shared';
+import { cn } from '@/utils/ui.ts';
 import { type TaskFormValues } from '../form.ts';
 
 export const StatusController: FC = () => {

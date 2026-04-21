@@ -3,10 +3,14 @@ import * as z from 'zod';
 import { TaskPriority, TaskStatus } from '@/types/tasks.ts';
 
 export const DESCRIPTION_MAX_LENGTH = 500;
+export const TITLE_MIN_LENGTH = 5;
 
 export const validationSchema = z.object({
-  title: z.string().trim().min(5, 'Title must be at least 5 characters'),
-  description: z.string().max(DESCRIPTION_MAX_LENGTH, 'Description must not exceed 500 characters').optional(),
+  title: z.string().trim().min(TITLE_MIN_LENGTH, `Title must be at least ${TITLE_MIN_LENGTH} characters`),
+  description: z
+    .string()
+    .max(DESCRIPTION_MAX_LENGTH, `Description must not exceed ${DESCRIPTION_MAX_LENGTH} characters`)
+    .optional(),
   status: z.enum(TaskStatus),
   priority: z.enum(TaskPriority),
   deadline: z

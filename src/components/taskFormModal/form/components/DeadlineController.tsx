@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button.tsx';
 import { Calendar } from '@/components/ui/calendar.tsx';
 import { FormFieldError, FormFieldLabel } from '@/components/formField/FormField.tsx';
-import { cn } from '@/utils/shared';
+import { cn } from '@/utils/ui.ts';
 import type { TaskFormValues } from '../form.ts';
 
 export const DeadlineController: FC = () => {

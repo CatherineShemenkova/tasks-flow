@@ -2,7 +2,7 @@ import { createElement, type FC } from 'react';
 
 import { STATUS_UI_MAP } from '@/constants/ui.ts';
 import { TaskStatus } from '@/types/tasks.ts';
-import { cn } from '@/utils/shared';
+import { cn } from '@/utils/ui.ts';
 
 interface TaskStatusBadgeProps {
   taskStatus: TaskStatus;

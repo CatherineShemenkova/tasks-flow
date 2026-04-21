@@ -1,8 +1,8 @@
 import type { ComponentType } from 'react';
 import { Circle, CircleCheckBig, Clock } from 'lucide-react';
 
-import { TaskPriority, TaskStatus } from '@/types/tasks.ts';
-import type { WithClassName } from '@/types/utils.ts';
+import { SortOption, TaskPriority, TaskStatus } from '@/types/tasks.ts';
+import type { WithClassName } from '@/types/shared.ts';
 
 interface PriorityConfig {
   label: string;
@@ -39,5 +39,24 @@ export const STATUS_UI_MAP: Record<TaskStatus, StatusConfig> = {
     label: 'Done',
     icon: CircleCheckBig,
     ui: 'bg-status-done/20 text-status-done',
+  },
+};
+
+interface SortConfig {
+  label: string;
+}
+
+export const SORT_UI_MAP: Record<SortOption, SortConfig> = {
+  [SortOption.CREATED_AT_DESC]: {
+    label: 'Created: Newest',
+  },
+  [SortOption.CREATED_AT_ASC]: {
+    label: 'Created: Oldest',
+  },
+  [SortOption.DEADLINE_ASC]: {
+    label: 'Deadline: Soonest',
+  },
+  [SortOption.DEADLINE_DESC]: {
+    label: 'Deadline: Latest',
   },
 };

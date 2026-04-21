@@ -11,7 +11,7 @@ import { StatusSelector } from './components/StatusSelector.tsx';
 import { OverdueMark } from './components/OverdueMark.tsx';
 import { TaskTagsPicker } from './components/TaskTagsPicker.tsx';
 import { type Task } from '@/types/tasks.ts';
-import { cn } from '@/utils/shared';
+import { cn } from '@/utils/ui.ts';
 import { isOverdue } from '@/utils/tasks.ts';
 import { PATHS } from '@/routes/paths.ts';
 
@@ -46,10 +46,10 @@ export const TaskCard: FC<TaskCardProps> = ({ task }) => {
 
             <div className="flex items-center gap-1">
               <Button
-                variant="ghost"
                 className="opacity-0 transition-opacity group-hover:opacity-100"
-                size="icon"
                 onClick={handleModalOpen}
+                size="icon"
+                variant="ghost"
               >
                 <Pencil />
               </Button>

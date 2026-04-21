@@ -3,10 +3,10 @@ import { ListFilter } from 'lucide-react';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx';
 import { changeFilter, selectPriority } from '@/store/tasksSlice/tasksSlice';
-import { useAppDispatch, useAppSelector } from '@/store/store.ts';
 import { ALL_OPTION } from '@/constants';
 import { PRIORITY_UI_MAP } from '@/constants/ui.ts';
 import { TaskPriority } from '@/types/tasks.ts';
+import { useAppDispatch, useAppSelector } from '@/store/hooks.ts';
 
 export const PriorityPicker: FC = () => {
   const dispatch = useAppDispatch();
@@ -26,9 +26,12 @@ export const PriorityPicker: FC = () => {
 
       <SelectContent position="popper">
         <SelectItem value={ALL_OPTION}>All Priority</SelectItem>
-        <SelectItem value={TaskPriority.HIGH}>{PRIORITY_UI_MAP[TaskPriority.HIGH].label}</SelectItem>
-        <SelectItem value={TaskPriority.MEDIUM}>{PRIORITY_UI_MAP[TaskPriority.MEDIUM].label}</SelectItem>
-        <SelectItem value={TaskPriority.LOW}>{PRIORITY_UI_MAP[TaskPriority.LOW].label}</SelectItem>
+
+        {Object.values(TaskPriority).map((priority) => (
+          <SelectItem key={priority} value={priority}>
+            {PRIORITY_UI_MAP[priority].label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

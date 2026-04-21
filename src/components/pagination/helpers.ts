@@ -1,3 +1,5 @@
+export const ELLIPSIS_PAGE = -1;
+
 export function getPages(current: number, totalPages: number): number[] {
   const pages: number[] = [];
   const siblingCount = 2;
@@ -15,7 +17,7 @@ export function getPages(current: number, totalPages: number): number[] {
   pages.push(1);
 
   if (showLeftEllipsis) {
-    pages.push(-1);
+    pages.push(ELLIPSIS_PAGE);
   } else if (leftSiblingIndex > 1) {
     for (let i = 2; i < leftSiblingIndex; i++) {
       pages.push(i);
@@ -29,7 +31,7 @@ export function getPages(current: number, totalPages: number): number[] {
   }
 
   if (showRightEllipsis) {
-    pages.push(-1);
+    pages.push(ELLIPSIS_PAGE);
   } else if (rightSiblingIndex < totalPages) {
     for (let i = rightSiblingIndex + 1; i < totalPages; i++) {
       pages.push(i);

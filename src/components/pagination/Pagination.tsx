@@ -10,8 +10,8 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination.tsx';
 import { PAGINATION } from '@/constants/pagination.ts';
-import { cn } from '@/utils/shared.ts';
-import { getPages } from './helpers.ts';
+import { cn } from '@/utils/ui.ts';
+import { ELLIPSIS_PAGE, getPages } from './helpers.ts';
 
 interface PaginationProps {
   current: number;
@@ -22,6 +22,7 @@ interface PaginationProps {
 
 export const Pagination: FC<PaginationProps> = ({ current, pageSize, total, onPageChange }) => {
   const totalPages = Math.ceil(total / pageSize);
+  const pages = getPages(current, totalPages);
 
   const handlePrev = () => {
     onPageChange(Math.max(PAGINATION.DEFAULT_PAGE, current - 1));
@@ -43,9 +44,9 @@ export const Pagination: FC<PaginationProps> = ({ current, pageSize, total, onPa
           />
         </PaginationItem>
 
-        {getPages(current, totalPages).map((page, i) => (
+        {pages.map((page, i) => (
           <PaginationItem key={i}>
-            {page === -1 ? (
+            {page === ELLIPSIS_PAGE ? (
               <PaginationEllipsis />
             ) : (
               <PaginationLink onClick={() => onPageChange(page)} isActive={current === page}>

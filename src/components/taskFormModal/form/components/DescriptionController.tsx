@@ -4,7 +4,7 @@ import { useController, useFormContext, Watch } from 'react-hook-form';
 import { FormFieldError, FormFieldLabel } from '@/components/formField/FormField.tsx';
 import { Field } from '@/components/ui/field.tsx';
 import { Textarea } from '@/components/ui/textarea.tsx';
-import { cn } from '@/utils/shared';
+import { cn } from '@/utils/ui.ts';
 import { DESCRIPTION_MAX_LENGTH, type TaskFormValues } from '../form.ts';
 
 export const DescriptionController: FC = () => {

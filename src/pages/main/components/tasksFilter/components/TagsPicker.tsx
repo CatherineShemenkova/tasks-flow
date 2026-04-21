@@ -12,9 +12,10 @@ import {
   ComboboxTrigger,
 } from '@/components/ui/combobox.tsx';
 import { Button } from '@/components/ui/button';
-import { useAppDispatch, useAppSelector } from '@/store/store.ts';
 import { changeFilter, selectSelectedTags } from '@/store/tasksSlice/tasksSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks.ts';
 import type { TaskTag } from '@/types/tasks.ts';
+import { itemEqualToItemId } from '@/utils/ui.ts';
 
 export const TagsPicker: FC = () => {
   const { data: tags } = useGetTasksTagsQuery();
@@ -25,8 +26,8 @@ export const TagsPicker: FC = () => {
 
   const selectedTags = useAppSelector(selectSelectedTags);
 
-  const handleTagsChange = (tags: TaskTag[]) => {
-    dispatch(changeFilter({ selectedTags: tags }));
+  const handleTagsChange = (selectedTags: TaskTag[]) => {
+    dispatch(changeFilter({ selectedTags }));
   };
 
   return (
@@ -34,7 +35,7 @@ export const TagsPicker: FC = () => {
       items={tags}
       value={selectedTags}
       onValueChange={handleTagsChange}
-      isItemEqualToValue={(a, b) => a.id === b.id}
+      isItemEqualToValue={itemEqualToItemId}
       multiple
     >
       <ComboboxTrigger

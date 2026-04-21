@@ -13,8 +13,8 @@ interface StatusSelectorProps {
 export const StatusSelector: FC<StatusSelectorProps> = ({ task }) => {
   const [updateTaskStatus, { isLoading }] = usePartialUpdateTaskMutation();
 
-  const handleStatusChange = (newStatus: TaskStatus) => {
-    updateTaskStatus({ id: task.id, status: newStatus });
+  const handleStatusChange = (status: TaskStatus) => {
+    updateTaskStatus({ id: task.id, status });
   };
 
   return (
@@ -30,17 +30,11 @@ export const StatusSelector: FC<StatusSelectorProps> = ({ task }) => {
       </SelectTrigger>
 
       <SelectContent position="popper">
-        <SelectItem value={TaskStatus.TODO}>
-          <TaskStatusBadge taskStatus={TaskStatus.TODO} />
-        </SelectItem>
-
-        <SelectItem value={TaskStatus.IN_PROGRESS}>
-          <TaskStatusBadge taskStatus={TaskStatus.IN_PROGRESS} />
-        </SelectItem>
-
-        <SelectItem value={TaskStatus.DONE}>
-          <TaskStatusBadge taskStatus={TaskStatus.DONE} />
-        </SelectItem>
+        {Object.values(TaskStatus).map((status) => (
+          <SelectItem key={status} value={status}>
+            <TaskStatusBadge taskStatus={status} />
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

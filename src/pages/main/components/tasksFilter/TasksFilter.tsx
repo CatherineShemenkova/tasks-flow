@@ -8,16 +8,16 @@ import { PriorityPicker } from './components/PriorityPicker.tsx';
 import { SortPicker } from './components/SortPicker.tsx';
 import {
   changeFilter,
-  resetFilter,
+  resetFilters,
   resetSingleFilter,
   selectHasActiveFilters,
   selectTasksFilter,
 } from '@/store/tasksSlice/tasksSlice';
-import { useAppDispatch, useAppSelector } from '@/store/store.ts';
 import type { TasksSliceFilter } from '@/store/tasksSlice/types.ts';
 import { TaskPriority, TaskStatus, type TaskTag } from '@/types/tasks.ts';
 import { PRIORITY_UI_MAP, STATUS_UI_MAP } from '@/constants/ui';
 import { ALL_OPTION } from '@/constants';
+import { useAppDispatch, useAppSelector } from '@/store/hooks.ts';
 
 export const TasksFilter: FC = () => {
   const dispatch = useAppDispatch();
@@ -35,7 +35,7 @@ export const TasksFilter: FC = () => {
   };
 
   const handleReset = () => {
-    dispatch(resetFilter());
+    dispatch(resetFilters());
   };
 
   return (

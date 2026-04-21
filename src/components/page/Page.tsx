@@ -1,7 +1,7 @@
-import type { FC, PropsWithChildren, ReactNode } from 'react';
+import { type ComponentType, createElement, type FC, type PropsWithChildren, type ReactNode } from 'react';
 
-import type { WithClassName } from '@/types/utils';
-import { cn } from '@/utils/shared';
+import type { WithClassName } from '@/types/shared.ts';
+import { cn } from '@/utils/ui.ts';
 
 export const PageContainer: FC<PropsWithChildren<WithClassName>> = ({ className, children }) => (
   <div className={cn('container mx-auto px-4 py-8', className)}>{children}</div>
@@ -23,3 +23,24 @@ export const PageTitle: FC<PageTitleProps> = ({ title, subtitle, action }) => (
     {action}
   </div>
 );
+
+interface PagePlaceholderProps {
+  title: string;
+  label: string;
+  icon: ComponentType<WithClassName>;
+}
+
+export const PagePlaceholder: FC<PropsWithChildren<PagePlaceholderProps>> = ({ title, label, icon, children }) => (
+  <div className="flex flex-col items-center justify-center gap-3 rounded-lg border px-6 py-12">
+    <div className="bg-muted rounded-full p-3">
+      {createElement(icon, { className: 'text-muted-foreground w-full h-hull' })}
+    </div>
+
+    <h3 className="font-medium">{title}</h3>
+
+    <p className="text-muted-foreground text-center text-sm">{label}</p>
+
+    {children}
+  </div>
+);
+

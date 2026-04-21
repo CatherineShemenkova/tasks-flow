@@ -1,6 +1,6 @@
-import { SortOption, TaskPriority, TaskStatus, type TaskTag } from '@/types/tasks.ts';
+import type { SortOption, TaskPriority, TaskStatus, TaskTag } from '@/types/tasks.ts';
 import type { Paginated } from '@/types/pagination.ts';
-import type { ALL_OPTION } from '@/constants';
+import { ALL_OPTION } from '@/constants';
 
 export interface TasksSliceState {
   pagination: Paginated;

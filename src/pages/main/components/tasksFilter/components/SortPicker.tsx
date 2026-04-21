@@ -3,8 +3,9 @@ import { ArrowUpDown } from 'lucide-react';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx';
 import { changeSort, selectTasksSort } from '@/store/tasksSlice/tasksSlice';
-import { useAppDispatch, useAppSelector } from '@/store/store.ts';
 import { SortOption } from '@/types/tasks.ts';
+import { useAppDispatch, useAppSelector } from '@/store/hooks.ts';
+import { SORT_UI_MAP } from '@/constants/ui.ts';
 
 export const SortPicker: FC = () => {
   const dispatch = useAppDispatch();
@@ -23,10 +24,11 @@ export const SortPicker: FC = () => {
       </SelectTrigger>
 
       <SelectContent position="popper">
-        <SelectItem value={SortOption.CREATED_AT_DESC}>Created: Newest</SelectItem>
-        <SelectItem value={SortOption.CREATED_AT_ASC}>Created: Oldest</SelectItem>
-        <SelectItem value={SortOption.DEADLINE_ASC}>Deadline: Soonest</SelectItem>
-        <SelectItem value={SortOption.DEADLINE_DESC}>Deadline: Latest</SelectItem>
+        {Object.values(SortOption).map((sort) => (
+          <SelectItem key={sort} value={sort}>
+            {SORT_UI_MAP[sort].label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

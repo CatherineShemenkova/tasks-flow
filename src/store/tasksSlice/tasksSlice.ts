@@ -6,7 +6,10 @@ import { SortOption } from '@/types/tasks.ts';
 import type { TasksSliceFilter, TasksSliceState } from './types.ts';
 
 const initialState: TasksSliceState = {
-  pagination: { page: PAGINATION.DEFAULT_PAGE, pageSize: PAGINATION.DEFAULT_SIZE },
+  pagination: {
+    page: PAGINATION.DEFAULT_PAGE,
+    pageSize: PAGINATION.DEFAULT_SIZE,
+  },
   filter: {
     search: '',
     status: ALL_OPTION,
@@ -35,7 +38,7 @@ const tasksSlice = createSlice({
       state.filter = { ...state.filter, [action.payload]: initialState.filter[action.payload] };
       state.pagination = initialState.pagination;
     },
-    resetFilter: (state) => {
+    resetFilters: (state) => {
       state.filter = initialState.filter;
       state.pagination = initialState.pagination;
     },
@@ -47,15 +50,15 @@ const tasksSlice = createSlice({
     selectStatus: (state) => state.filter.status,
     selectTasksSort: (state) => state.sort,
     selectPagination: (state) => state.pagination,
+    selectSelectedTags: (state) => state.filter.selectedTags,
     selectHasActiveFilters: (state) => {
       const filter = state.filter;
       return filter.selectedTags.length > 0 || filter.status !== ALL_OPTION || filter.priority !== ALL_OPTION;
     },
-    selectSelectedTags: (state) => state.filter.selectedTags,
   },
 });
 
-export const { changePage, changeSort, changeFilter, resetSingleFilter, resetFilter } = tasksSlice.actions;
+export const { changePage, changeSort, changeFilter, resetSingleFilter, resetFilters } = tasksSlice.actions;
 export const {
   selectTasksFilter,
   selectPriority,

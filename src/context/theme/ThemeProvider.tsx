@@ -1,6 +1,6 @@
 import { useEffect, useState, type PropsWithChildren, type FC } from 'react';
 
-import { Theme } from './constants.ts';
+import { Theme } from './types.ts';
 import { ThemeProviderContext, type ThemeProviderState } from './context.ts';
 
 type ThemeProviderProps = {
